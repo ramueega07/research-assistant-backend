@@ -3,8 +3,9 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_groq import ChatGroq
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_pinecone import PineconeVectorStore
-from langchain_huggingface import HuggingFaceEmbeddings
-from config import GROQ_API_KEY, PINECONE_INDEX, GEMINI_API_KEY
+from langchain_huggingface import HuggingFaceEmbeddings, HuggingFaceEndpointEmbeddings
+from langchain_community.embeddings import HuggingFaceInferenceAPIEmbeddings
+from config import GROQ_API_KEY, PINECONE_INDEX, GEMINI_API_KEY, HUGGINGFACE_API_KEY
 
 llm = ChatGroq(groq_api_key=GROQ_API_KEY,model="llama-3.3-70b-versatile", temperature=0)
 #llm = ChatGoogleGenerativeAI(google_api_key=GEMINI_API_KEY, model="gemini-2.5-flash",temperature=0, convert_system_message_to_human=True)
@@ -31,7 +32,7 @@ output_parser = StrOutputParser()
 
 rag_chain = prompt | llm | output_parser
 
-embedding = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+embedding = HuggingFaceEndpointEmbeddings(huggingfacehub_api_token=HUGGINGFACE_API_KEY,model="sentence-transformers/all-MiniLM-L6-v2")
 index_name = "researchassistant1"
 vector_store = PineconeVectorStore(embedding=embedding, index_name=index_name)
 

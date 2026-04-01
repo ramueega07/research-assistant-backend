@@ -1,9 +1,10 @@
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings, HuggingFaceEndpointEmbeddings
+from langchain_community.embeddings import HuggingFaceInferenceAPIEmbeddings
 from langchain_pinecone import PineconeVectorStore
 from pinecone import Pinecone
-from config import PINECONE_API_KEY, PINECONE_INDEX
+from config import PINECONE_API_KEY, PINECONE_INDEX, HUGGINGFACE_API_KEY
 import os
 
 def load_and_split_pdf(file_path):
@@ -28,7 +29,7 @@ def load_and_split_pdf(file_path):
 
     return chunks
 
-embedding = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+embedding = HuggingFaceEndpointEmbeddings(huggingfacehub_api_token=HUGGINGFACE_API_KEY,model="sentence-transformers/all-MiniLM-L6-v2")
 
 pc = Pinecone(api_key=PINECONE_API_KEY)
 index_name = "researchassistant1"
